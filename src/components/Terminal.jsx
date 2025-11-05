@@ -198,7 +198,7 @@ export default function Terminal({ fsRoot, currentPath, setCurrentPath }) {
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-zinc-950 border border-zinc-300/70 dark:border-zinc-700/70">
-      <div ref={scrollRef} className="flex-1 overflow-auto px-4 py-3 font-mono text-sm text-zinc-800 dark:text-zinc-100">
+      <div ref={scrollRef} className="flex-1 overflow-auto px-4 py-3 font-mono text-sm text-zinc-800 dark:text-zinc-100 custom-scrollbar">
         {history.map((item, idx) => (
           <div key={idx} className="whitespace-pre-wrap leading-6">
             {item.type === 'input' ? (

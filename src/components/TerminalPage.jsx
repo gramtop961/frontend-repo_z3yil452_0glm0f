@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useCallback } from 'react';
 import TitleBar from './TitleBar';
 import FolderTree from './FolderTree';
 import Terminal from './Terminal';
@@ -85,25 +85,57 @@ export default function TerminalPage() {
   );
 
   const [currentPath, setCurrentPath] = useState([]);
+  const [sidebarWidth, setSidebarWidth] = useState(320); // px
+  const draggingRef = useRef(false);
+
+  const onMouseMove = useCallback((e) => {
+    if (!draggingRef.current) return;
+    const min = 200;
+    const max = 560;
+    const next = Math.min(max, Math.max(min, e.clientX - (window.innerWidth - Math.min(window.innerWidth, 1024)) / 2 - 32));
+    setSidebarWidth(next);
+  }, []);
+
+  const onMouseUp = useCallback(() => {
+    draggingRef.current = false;
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup', onMouseUp);
+  }, [onMouseMove]);
+
+  const startDrag = useCallback(() => {
+    draggingRef.current = true;
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  }, [onMouseMove, onMouseUp]);
 
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-b from-emerald-50 to-white text-emerald-950">
+    <div className="h-screen overflow-hidden bg-gradient-to-b from-emerald-50 to-white dark:from-zinc-900 dark:to-zinc-950 text-emerald-950 dark:text-emerald-100">
       <div className="mx-auto flex h-full max-w-6xl flex-col px-4 sm:px-8 py-6 sm:py-8 gap-6">
         <div className="shrink-0">
           <h2 className="text-3xl font-semibold tracking-tight">Terminal</h2>
-          <p className="text-emerald-800/80 mt-1">Use bash-like commands to explore my projects and details.</p>
+          <p className="text-emerald-800/80 dark:text-emerald-200/80 mt-1">Use bash-like commands to explore my projects and details.</p>
         </div>
 
-        <div className="flex min-h-0 flex-1 rounded-xl overflow-hidden shadow-lg shadow-emerald-600/10 border border-emerald-200 bg-white">
+        <div className="flex min-h-0 flex-1 rounded-xl overflow-hidden shadow-lg shadow-emerald-600/10 border border-emerald-200/70 dark:border-emerald-900/60 bg-white dark:bg-zinc-950">
           <div className="flex w-full min-h-0 flex-col">
             <TitleBar title="bash — portfolio" path={currentPath.length ? '~/'+ currentPath.join('/') : '~'} />
-            <div className="grid min-h-0 flex-1 grid-cols-12 gap-0">
-              <aside className="hidden md:block col-span-3 border-r border-emerald-100 bg-emerald-50/40 min-h-0 overflow-auto">
+            <div className="flex min-h-0 flex-1">
+              {/* Sidebar */}
+              <aside className="hidden md:flex min-h-0 flex-col border-r border-emerald-100/60 dark:border-emerald-900/60 bg-emerald-50/40 dark:bg-zinc-900/40"
+                style={{ width: sidebarWidth }}>
                 <FolderTree fsRoot={fsRoot} currentPath={currentPath} onNavigate={setCurrentPath} />
               </aside>
-              <main className="col-span-12 md:col-span-9 min-h-0 flex">
-                {/* Terminal fills remaining space and scrolls internally */}
-                <div className="flex h-full min-h-0 w-full">
+
+              {/* Resizer handle */}
+              <div
+                className="hidden md:block w-1 cursor-col-resize bg-transparent hover:bg-emerald-500/20"
+                onMouseDown={startDrag}
+                aria-label="Resize sidebar"
+              />
+
+              {/* Terminal area */}
+              <main className="flex-1 min-h-0 flex">
+                <div className="flex h-full min-h-0 w-full p-0">
                   <Terminal fsRoot={fsRoot} currentPath={currentPath} setCurrentPath={setCurrentPath} />
                 </div>
               </main>

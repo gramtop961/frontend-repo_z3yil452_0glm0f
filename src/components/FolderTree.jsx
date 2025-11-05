@@ -34,7 +34,7 @@ function TreeNode({ node, path, currentPath, onNavigate }) {
 
 export default function FolderTree({ fsRoot, currentPath, onNavigate }) {
   return (
-    <div className="h-full overflow-auto p-3 text-sm">
+    <div className="h-full overflow-auto p-3 text-sm custom-scrollbar">
       <TreeNode node={fsRoot} path={[]} currentPath={currentPath} onNavigate={onNavigate} />
     </div>
   );
