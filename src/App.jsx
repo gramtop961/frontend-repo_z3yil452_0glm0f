@@ -4,10 +4,10 @@ import FolderTree from './components/FolderTree';
 import Terminal from './components/Terminal';
 import StatusBar from './components/StatusBar';
 import Spline from '@splinetool/react-spline';
-import { Github, Linkedin, Mail, Trophy, GraduationCap } from 'lucide-react';
+import { Github, Linkedin, Mail, Trophy } from 'lucide-react';
 
 export default function App() {
-  // Virtual filesystem modeled for the terminal portfolio
+  // Virtual filesystem — simplified per request: only projects folder + single files for about, skills, achievements
   const fsRoot = useMemo(
     () => ({
       type: 'dir',
@@ -15,27 +15,28 @@ export default function App() {
         'about.txt': {
           type: 'file',
           content:
-            "I'm Suhas Uppala — a developer passionate about AI/ML, full‑stack apps, and building delightful, interactive user experiences. I enjoy shipping real products that are fast, accessible, and thoughtfully designed.\n\nWhat I work with:\n- Languages: C, C++, Java, R, Python, SQL, JavaScript, HTML, CSS\n- Frontend: React (Vite), Tailwind, Flutter\n- Backend: FastAPI, Node\n- ML/DS: scikit‑learn, Pandas, Keras, TensorFlow, NLP\n- Data Viz: Power BI, Tableau, R\n- Tools: Git, Docker, Data Preprocessing, Recommender Systems\n- DB: MySQL, MongoDB, SQLite\n- OS: Windows, Linux",
+            "I'm Suhas Uppala — a developer passionate about AI/ML and full‑stack apps. I craft interactive, high‑performance experiences with clean design and accessible UX.\n\nContact:\n- GitHub: https://github.com/suhasuppala1805\n- Email: suhasuppala1805@gmail.com\n- LinkedIn: https://www.linkedin.com/in/suhas-uppala",
         },
         'skills.txt': {
           type: 'file',
           content:
-            '- Programming: C, C++, Java, R, Python, SQL, JavaScript\n- Web: HTML, CSS, React, Tailwind, MERN\n- Backend: FastAPI, Node\n- ML: scikit-learn, Pandas, TensorFlow, Keras\n- Data Viz: Power BI, Tableau, R\n- Tools: GitHub, Docker\n- Databases: MySQL, MongoDB, SQLite\n- OS: Windows, Linux',
+            '- Programming: C, C++, Java, R, Python, SQL, JavaScript\n- Web: HTML, CSS, React (Vite), Tailwind, MERN\n- Backend: FastAPI, Node\n- ML/DS: scikit-learn, Pandas, TensorFlow, Keras, NLP, Recommender Systems\n- Data Viz: Power BI, Tableau, R\n- Tools: Git, GitHub, Docker\n- Databases: MySQL, MongoDB, SQLite\n- OS: Windows, Linux',
         },
-        education: {
-          type: 'dir',
-          children: {
-            'btech.txt': {
-              type: 'file',
-              content:
-                'B.Tech in Computer Science Engineering (AIML) — VNR Vignana Jyothi Institute of Engineering and Technology (2022–2026)\nCGPA: 8.42',
-            },
-            'intermediate.txt': {
-              type: 'file',
-              content:
-                'Intermediate — Sri Chaitanya Junior College, Telangana (2020–2022)\nPercentage: 95.1%',
-            },
-          },
+        'achievements.txt': {
+          type: 'file',
+          content:
+            [
+              'Achievements & Roles:',
+              '- Winner — GDGC Solution Challenge 2025 (SportAI; RAG, ML, OpenCV, Flutter).',
+              '- Smart India Hackathon 2024 — Finalist (Top 2.4% nationwide; Ministry of Communication).',
+              '- 2nd Prize — Project Contest & Consolation in Paper Presentation at Convergence 2K25.',
+              '- 3rd Place — Project Expo among 100+ teams (CSE‑AIML & IoT, VNRVJIET).',
+              '- Selected — Amazon ML Summer School.',
+              '',
+              'Leadership:',
+              '- Non‑Technical Head — CSI Student Chapter, VNR VJIET (1000+ members).',
+              '- Superior Design Head — Krithomedh, AIML Club, VNR VJIET (300+ members).',
+            ].join('\n'),
         },
         projects: {
           type: 'dir',
@@ -46,7 +47,7 @@ export default function App() {
                 'README.md': {
                   type: 'file',
                   content:
-                    'Live Object Detection\n- Built a YOLOv5-based system for real-time detection on live streams.\n- Integrated NLP-driven text commands for targeted tracking.\n- Delivered via a sleek Flask interface with live visualization.',
+                    'Live Object Detection\n- YOLOv5-based real-time detection on live streams.\n- NLP-driven text commands for targeted tracking.\n- Flask interface with live visualization.',
                 },
               },
             },
@@ -56,7 +57,7 @@ export default function App() {
                 'README.md': {
                   type: 'file',
                   content:
-                    'SportAI – AI-Powered Athlete Management\n- Real-time monitoring using Flutter, FastAPI, and OpenCV.\n- 90% posture detection accuracy; 40% injury reduction for 100+ users.\n- Injury prediction with Random Forest across 7 metrics (85% early detection).\n- RAG-based AI coaching using LangChain & Gemini API (1000+ daily requests).',
+                    'SportAI – AI-Powered Athlete Management\n- Real-time monitoring using Flutter, FastAPI, OpenCV.\n- 90% posture detection accuracy; 40% injury reduction for 100+ users.\n- Injury prediction (Random Forest across 7 metrics) — 85% early detection.\n- RAG-based AI coaching with LangChain & Gemini API (~1000+ daily requests).',
                 },
               },
             },
@@ -66,7 +67,7 @@ export default function App() {
                 'README.md': {
                   type: 'file',
                   content:
-                    'Books Hub – Personalized Library Manager\n- Full-stack app for cataloging, borrowing, and returns.\n- Secure auth, efficient DB management.\n- Dynamic search, filtering, and accessible UI.',
+                    'Books Hub — Personalized Library Manager\n- Full‑stack app for cataloging, borrowing, and returns.\n- Secure auth, efficient database management.\n- Dynamic search, filtering, and accessible UI.',
                 },
               },
             },
@@ -76,70 +77,11 @@ export default function App() {
                 'README.md': {
                   type: 'file',
                   content:
-                    'Anomaly Detection in CCTV Footage\n- LRCN-based system for analyzing CCTV streams.\n- Detects suspicious activity and triggers real-time alerts.\n- Generates date-wise anomaly reports for review.',
+                    'Anomaly Detection in CCTV Footage\n- LRCN‑based system for analyzing CCTV streams.\n- Detects suspicious activity and triggers real‑time alerts.\n- Generates date‑wise anomaly reports.',
                 },
               },
             },
           },
-        },
-        certifications: {
-          type: 'dir',
-          children: {
-            'nptel-iot.txt': { type: 'file', content: 'Introduction to IoT — NPTEL (Score: 85%)' },
-            'tableau.txt': { type: 'file', content: 'Certification in Tableau' },
-            'python-nxtwave.txt': { type: 'file', content: 'Python Certification — NxtWave' },
-            'databases-nxtwave.txt': { type: 'file', content: 'Introduction to Databases — NxtWave' },
-            'developer-foundations.txt': { type: 'file', content: 'Developer Foundations — NxtWave' },
-            'internshala.txt': { type: 'file', content: 'Internshala Certification' },
-          },
-        },
-        achievements: {
-          type: 'dir',
-          children: {
-            'gds-solution-challenge-2025.txt': {
-              type: 'file',
-              content:
-                'Winner — GDGC Solution Challenge 2025 for SportAI (RAG, ML, OpenCV, Flutter).',
-            },
-            'project-contest-convergence-2k25.txt': {
-              type: 'file',
-              content: '2nd Prize — Project Contest & Consolation in Paper Presentation at Convergence 2K25.',
-            },
-            'project-expo.txt': {
-              type: 'file',
-              content:
-                '3rd Place — Project Expo among 100+ teams (CSE-AIML & IoT, VNRVJIET).',
-            },
-            'sih-2024-finalist.txt': {
-              type: 'file',
-              content:
-                'Smart India Hackathon 2024 — Finalist (Top 2.4% nationwide; Ministry of Communication).',
-            },
-            'amazon-ml-summer-school.txt': {
-              type: 'file',
-              content: 'Selected for Amazon ML Summer School.',
-            },
-          },
-        },
-        roles: {
-          type: 'dir',
-          children: {
-            'csi-head.txt': {
-              type: 'file',
-              content:
-                'Non-Technical Head — Computer Society of India Student Chapter, VNR VJIET (1000+ members).',
-            },
-            'krithomedh-design-head.txt': {
-              type: 'file',
-              content:
-                'Superior Design Head — Krithomedh, Department of AIML Club, VNR VJIET (300+ members).',
-            },
-          },
-        },
-        'contact.txt': {
-          type: 'file',
-          content:
-            'Name: Suhas Uppala\nGitHub: https://github.com/suhasuppala1805\nEmail: suhasuppala1805@gmail.com\nLinkedIn: https://www.linkedin.com/in/suhas-uppala',
         },
       },
     }),
@@ -159,9 +101,7 @@ export default function App() {
           <div className="mx-auto max-w-6xl px-4 sm:px-8 w-full">
             <div className="pointer-events-none select-none">
               <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight mb-3">Suhas Uppala</h1>
-              <p className="text-zinc-200 max-w-2xl">
-                AI/ML and full‑stack developer crafting interactive, delightful products.
-              </p>
+              <p className="text-zinc-200 max-w-2xl">AI/ML and full‑stack developer crafting interactive, delightful products.</p>
               <div className="mt-4 flex gap-3 text-zinc-100/90 flex-wrap">
                 <a className="pointer-events-auto inline-flex items-center gap-2 bg-zinc-900/70 backdrop-blur px-3 py-1.5 rounded-full hover:bg-zinc-900/90 transition" href="https://github.com/suhasuppala1805" target="_blank" rel="noreferrer">
                   <Github size={16} /> GitHub
@@ -174,9 +114,8 @@ export default function App() {
                 </a>
               </div>
               <div className="mt-3 flex gap-3 text-xs text-zinc-200/90 flex-wrap">
-                <span className="inline-flex items-center gap-1 bg-zinc-900/60 px-2 py-1 rounded-full"><GraduationCap size={14} /> CSE (AIML), VNR VJIET</span>
-                <span className="inline-flex items-center gap-1 bg-zinc-900/60 px-2 py-1 rounded-full"><Trophy size={14} /> SIH 2024 Finalist</span>
                 <span className="inline-flex items-center gap-1 bg-zinc-900/60 px-2 py-1 rounded-full"><Trophy size={14} /> GDGC Solution Challenge Winner</span>
+                <span className="inline-flex items-center gap-1 bg-zinc-900/60 px-2 py-1 rounded-full"><Trophy size={14} /> SIH 2024 Finalist</span>
               </div>
             </div>
           </div>
@@ -188,7 +127,7 @@ export default function App() {
         <div className="mx-auto max-w-6xl">
           <div className="mb-6">
             <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">Terminal Portfolio</h2>
-            <p className="text-zinc-600 dark:text-zinc-400 mt-1">Explore my work using familiar bash commands and a mac-style layout.</p>
+            <p className="text-zinc-600 dark:text-zinc-400 mt-1">Use bash-like commands to explore my projects and details.</p>
           </div>
 
           <div className="rounded-xl overflow-hidden shadow-lg shadow-black/5">
