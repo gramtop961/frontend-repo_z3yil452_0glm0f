@@ -87,26 +87,29 @@ export default function TerminalPage() {
   const [currentPath, setCurrentPath] = useState([]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white text-emerald-950">
-      <div className="mx-auto max-w-6xl px-4 sm:px-8 py-10 sm:py-14">
-        <div className="mb-6">
+    <div className="h-screen overflow-hidden bg-gradient-to-b from-emerald-50 to-white text-emerald-950">
+      <div className="mx-auto flex h-full max-w-6xl flex-col px-4 sm:px-8 py-6 sm:py-8 gap-6">
+        <div className="shrink-0">
           <h2 className="text-3xl font-semibold tracking-tight">Terminal</h2>
           <p className="text-emerald-800/80 mt-1">Use bash-like commands to explore my projects and details.</p>
         </div>
-        <div className="rounded-xl overflow-hidden shadow-lg shadow-emerald-600/10 border border-emerald-200 bg-white">
-          <TitleBar title="bash — portfolio" path={currentPath.length ? '~/' + currentPath.join('/') : '~'} />
-          <div className="grid grid-cols-12 gap-0">
-            <aside className="hidden md:block col-span-3 border-r border-emerald-100 bg-emerald-50/40">
-              <FolderTree fsRoot={fsRoot} currentPath={currentPath} onNavigate={setCurrentPath} />
-            </aside>
-            <main className="col-span-12 md:col-span-9">
-              {/* Constrain height so content scrolls inside the terminal */}
-              <div className="h-[60vh] sm:h-[65vh]">
-                <Terminal fsRoot={fsRoot} currentPath={currentPath} setCurrentPath={setCurrentPath} />
-              </div>
-            </main>
+
+        <div className="flex min-h-0 flex-1 rounded-xl overflow-hidden shadow-lg shadow-emerald-600/10 border border-emerald-200 bg-white">
+          <div className="flex w-full min-h-0 flex-col">
+            <TitleBar title="bash — portfolio" path={currentPath.length ? '~/'+ currentPath.join('/') : '~'} />
+            <div className="grid min-h-0 flex-1 grid-cols-12 gap-0">
+              <aside className="hidden md:block col-span-3 border-r border-emerald-100 bg-emerald-50/40 min-h-0 overflow-auto">
+                <FolderTree fsRoot={fsRoot} currentPath={currentPath} onNavigate={setCurrentPath} />
+              </aside>
+              <main className="col-span-12 md:col-span-9 min-h-0 flex">
+                {/* Terminal fills remaining space and scrolls internally */}
+                <div className="flex h-full min-h-0 w-full">
+                  <Terminal fsRoot={fsRoot} currentPath={currentPath} setCurrentPath={setCurrentPath} />
+                </div>
+              </main>
+            </div>
+            <StatusBar currentPath={currentPath} />
           </div>
-          <StatusBar currentPath={currentPath} />
         </div>
       </div>
     </div>

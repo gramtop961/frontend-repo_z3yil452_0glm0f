@@ -27,9 +27,9 @@ function GreenAnimation() {
 
 export default function StartPage() {
   return (
-    <div className="relative min-h-screen bg-white text-emerald-900">
+    <div className="relative h-screen overflow-hidden bg-white text-emerald-900">
       <GreenAnimation />
-      <div className="relative z-10 mx-auto max-w-6xl px-6 py-24 sm:py-32">
+      <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center px-6">
         <div className="max-w-3xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-emerald-700 text-xs">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
