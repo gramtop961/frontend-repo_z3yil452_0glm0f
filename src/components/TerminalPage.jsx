@@ -3,6 +3,7 @@ import TitleBar from './TitleBar';
 import FolderTree from './FolderTree';
 import Terminal from './Terminal';
 import StatusBar from './StatusBar';
+import InfoPanel from './InfoPanel';
 
 export default function TerminalPage() {
   const fsRoot = useMemo(
@@ -133,10 +134,13 @@ export default function TerminalPage() {
                 aria-label="Resize sidebar"
               />
 
-              {/* Terminal area */}
+              {/* Terminal area + Info panel */}
               <main className="flex-1 min-h-0 flex">
                 <div className="flex h-full min-h-0 w-full p-0">
-                  <Terminal fsRoot={fsRoot} currentPath={currentPath} setCurrentPath={setCurrentPath} />
+                  <div className="flex-1 min-w-0">
+                    <Terminal fsRoot={fsRoot} currentPath={currentPath} setCurrentPath={setCurrentPath} />
+                  </div>
+                  <InfoPanel fsRoot={fsRoot} currentPath={currentPath} />
                 </div>
               </main>
             </div>
