@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import StartPage from './components/StartPage';
 import TerminalPage from './components/TerminalPage';
 import ThemeSwitch from './components/ThemeSwitch';
+import Navigation from './components/Navigation';
 
 function useHashRoute() {
   const [route, setRoute] = useState(() => (window.location.hash.replace('#', '') || '/'));
@@ -31,6 +32,7 @@ export default function App() {
     <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
       <ScrollbarStyles />
       <ThemeSwitch />
+      <Navigation />
       {route.startsWith('/terminal') ? <TerminalPage /> : <StartPage />}
     </div>
   );

@@ -1,67 +1,102 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Rocket } from 'lucide-react';
-import { motion } from 'framer-motion';
-import Spline from '@splinetool/react-spline';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 function GridFlowBackground() {
+  // Two-layer green grid that drifts linearly
   return (
-    <div className="pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,black,rgba(0,0,0,0.6)_60%,transparent)]">
-      <div className="absolute inset-0 opacity-20 dark:opacity-30" style={{ backgroundImage: `linear-gradient(rgba(16,185,129,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.15) 1px, transparent 1px)`, backgroundSize: '32px 32px' }} />
+    <div className="pointer-events-none absolute inset-0">
+      {/* Thin grid lines */}
       <motion.div
-        className="absolute inset-0 opacity-25"
-        animate={{ backgroundPositionX: ['0%', '100%'], backgroundPositionY: ['0%', '100%'] }}
-        transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-        style={{ backgroundImage: 'radial-gradient(closest-side, rgba(16,185,129,0.25), transparent 70%)', backgroundSize: '60% 60%' }}
+        className="absolute inset-0 opacity-40 dark:opacity-50"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(16,185,129,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.22) 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+        }}
+        animate={{ backgroundPositionX: ['0px', '64px'], backgroundPositionY: ['0px', '64px'] }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+      />
+      {/* Soft glow sweep */}
+      <motion.div
+        className="absolute inset-0"
+        style={{ backgroundImage: 'radial-gradient(60% 60% at 50% 50%, rgba(16,185,129,0.2), transparent 60%)' }}
+        animate={{ backgroundPositionX: ['0%', '100%'] }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
       />
     </div>
   );
 }
 
-function GreenGlobe() {
+function GreenGlobeInteractive() {
+  // Cursor-reactive green globe with subtle parallax and float
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 120, damping: 20, mass: 0.4 });
+  const sy = useSpring(my, { stiffness: 120, damping: 20, mass: 0.4 });
+  const translateX = useTransform(sx, (v) => `${v * 0.04}px`);
+  const translateY = useTransform(sy, (v) => `${v * 0.04}px`);
+
+  useEffect(() => {
+    function onMove(e) {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      mx.set(e.clientX - cx);
+      my.set(e.clientY - cy);
+    }
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, [mx, my]);
+
   return (
-    <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 h-[60vmin] w-[60vmin]">
+    <motion.div
+      className="pointer-events-none absolute right-12 top-1/2 -translate-y-1/2 h-[60vmin] w-[60vmin]"
+      style={{ translateX, translateY }}
+      aria-hidden
+    >
       <motion.div
         className="absolute inset-0 rounded-full"
         style={{
-          background: 'conic-gradient(from 0deg, rgba(16,185,129,0.4), rgba(52,211,153,0.2), rgba(16,185,129,0.4))',
-          filter: 'blur(24px)'
+          background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.6), rgba(52,211,153,0.2) 40%, transparent 60%)',
+          filter: 'blur(10px)'
         }}
+        animate={{ scale: [1, 1.04, 1] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute inset-0 rounded-full border border-emerald-300/50"
         animate={{ rotate: 360 }}
         transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
       />
-      <motion.div
-        className="absolute inset-0 rounded-full border border-emerald-300/40"
-        animate={{ scale: [0.98, 1.02, 0.98] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-      />
-    </div>
+      {/* Lat/long lines */}
+      <div className="absolute inset-6 rounded-full opacity-60">
+        <div className="absolute inset-0 rounded-full" style={{
+          backgroundImage:
+            'radial-gradient(circle at 50% 50%, transparent 34%, rgba(16,185,129,0.35) 35%, transparent 36%), repeating-radial-gradient(circle at 50% 50%, rgba(16,185,129,0.25) 0, rgba(16,185,129,0.25) 1px, transparent 1px, transparent 14%)'
+        }} />
+      </div>
+    </motion.div>
   );
 }
 
 export default function StartPage() {
   return (
     <div className="relative h-screen overflow-hidden bg-white dark:bg-zinc-950 text-emerald-900 dark:text-emerald-100">
-      {/* Spline cover background */}
-      <div className="absolute inset-0">
-        <Spline scene="https://prod.spline.design/Gt5HUob8aGDxOUep/scene.splinecode" style={{ width: '100%', height: '100%' }} />
-      </div>
-
+      {/* Green grid background (no 3D scene) */}
       <GridFlowBackground />
-      <GreenGlobe />
+      <GreenGlobeInteractive />
 
-      {/* Gradient overlay to improve contrast, non-blocking */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/10" />
-
-      <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center px-6">
+      {/* Foreground content */}
+      <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center px-6 pt-20">
         <div className="max-w-3xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200/60 bg-emerald-50/70 dark:border-emerald-400/30 dark:bg-emerald-950/40 px-3 py-1 text-emerald-700 dark:text-emerald-200 text-xs">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
             Interactive Portfolio
           </span>
-          <h1 className="mt-5 text-4xl sm:text-6xl font-semibold tracking-tight text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.3)]">
+          <h1 className="mt-5 text-4xl sm:text-6xl font-semibold tracking-tight">
             Explore my world of projects in a terminal experience
           </h1>
-          <p className="mt-4 text-lg text-emerald-100/90">
+          <p className="mt-4 text-lg text-emerald-900/80 dark:text-emerald-100/80">
             A clean, green aesthetic with an interactive, bash-like terminal to browse projects, skills, and achievements.
           </p>
           <div className="mt-8 flex items-center gap-4">
