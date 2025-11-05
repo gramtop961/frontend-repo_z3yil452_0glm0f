@@ -9,7 +9,7 @@ export default function StatusBar({ currentPath }) {
   }, []);
 
   return (
-    <div className="rounded-b-xl bg-[#f7f7f8] dark:bg-zinc-900 border border-t-0 border-zinc-300/70 dark:border-zinc-700/70 px-3 py-2 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-400">
+    <div className="rounded-b-xl bg-emerald-50 border border-t-0 border-emerald-200 px-3 py-2 flex items-center justify-between text-xs text-emerald-700">
       <div className="truncate">{currentPath.length ? '~/' + currentPath.join('/') : '~'}</div>
       <div className="hidden sm:block">Type `help` to see available commands</div>
       <div>{time.toLocaleTimeString()}</div>
