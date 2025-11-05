@@ -1,153 +1,116 @@
-import React, { useMemo, useState, useRef, useCallback } from 'react';
-import TitleBar from './TitleBar';
-import FolderTree from './FolderTree';
-import Terminal from './Terminal';
-import StatusBar from './StatusBar';
-import InfoPanel from './InfoPanel';
+import { useEffect, useRef, useState } from 'react';
+import { Clock, CornerDownLeft } from 'lucide-react';
+
+const PROMPT = '$';
+
+function useClock() {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return now.toLocaleTimeString();
+}
+
+function Line({ children }) {
+  return <div className="leading-6 text-emerald-100/90">{children}</div>;
+}
 
 export default function TerminalPage() {
-  const fsRoot = useMemo(
-    () => ({
-      type: 'dir',
-      children: {
-        'about.txt': {
-          type: 'file',
-          content:
-            "I'm Suhas Uppala — a developer passionate about AI/ML and full‑stack apps. I craft interactive, high‑performance experiences with clean design and accessible UX.\n\nContact:\n- GitHub: https://github.com/suhasuppala1805\n- Email: suhasuppala1805@gmail.com\n- LinkedIn: https://www.linkedin.com/in/suhas-uppala",
-        },
-        'skills.txt': {
-          type: 'file',
-          content:
-            '- Programming: C, C++, Java, R, Python, SQL, JavaScript\n- Web: HTML, CSS, React (Vite), Tailwind, MERN\n- Backend: FastAPI, Node\n- ML/DS: scikit-learn, Pandas, TensorFlow, Keras, NLP, Recommender Systems\n- Data Viz: Power BI, Tableau, R\n- Tools: Git, GitHub, Docker\n- Databases: MySQL, MongoDB, SQLite\n- OS: Windows, Linux',
-        },
-        'achievements.txt': {
-          type: 'file',
-          content: [
-            'Achievements & Roles:',
-            '- Winner — GDGC Solution Challenge 2025 (SportAI; RAG, ML, OpenCV, Flutter).',
-            '- Smart India Hackathon 2024 — Finalist (Top 2.4% nationwide; Ministry of Communication).',
-            '- 2nd Prize — Project Contest & Consolation in Paper Presentation at Convergence 2K25.',
-            '- 3rd Place — Project Expo among 100+ teams (CSE‑AIML & IoT, VNRVJIET).',
-            '- Selected — Amazon ML Summer School.',
-            '',
-            'Leadership:',
-            '- Non‑Technical Head — CSI Student Chapter, VNR VJIET (1000+ members).',
-            '- Superior Design Head — Krithomedh, AIML Club, VNR VJIET (300+ members).',
-          ].join('\n'),
-        },
-        projects: {
-          type: 'dir',
-          children: {
-            'live-object-detection': {
-              type: 'dir',
-              children: {
-                'README.md': {
-                  type: 'file',
-                  content:
-                    'Live Object Detection\n- YOLOv5-based real-time detection on live streams.\n- NLP-driven text commands for targeted tracking.\n- Flask interface with live visualization.',
-                },
-              },
-            },
-            'sportai-athlete-platform': {
-              type: 'dir',
-              children: {
-                'README.md': {
-                  type: 'file',
-                  content:
-                    'SportAI – AI-Powered Athlete Management\n- Real-time monitoring using Flutter, FastAPI, OpenCV.\n- 90% posture detection accuracy; 40% injury reduction for 100+ users.\n- Injury prediction (Random Forest across 7 metrics) — 85% early detection.\n- RAG-based AI coaching with LangChain & Gemini API (~1000+ daily requests).',
-                },
-              },
-            },
-            'books-hub': {
-              type: 'dir',
-              children: {
-                'README.md': {
-                  type: 'file',
-                  content:
-                    'Books Hub — Personalized Library Manager\n- Full‑stack app for cataloging, borrowing, and returns.\n- Secure auth, efficient database management.\n- Dynamic search, filtering, and accessible UI.',
-                },
-              },
-            },
-            'anomaly-detection-cctv': {
-              type: 'dir',
-              children: {
-                'README.md': {
-                  type: 'file',
-                  content:
-                    'Anomaly Detection in CCTV Footage\n- LRCN‑based system for analyzing CCTV streams.\n- Detects suspicious activity and triggers real‑time alerts.\n- Generates date‑wise anomaly reports.',
-                },
-              },
-            },
-          },
-        },
-      },
-    }),
-    []
-  );
+  const [history, setHistory] = useState([
+    'Welcome to the web terminal. Type "help" to see available commands.'
+  ]);
+  const [input, setInput] = useState('');
+  const inputRef = useRef(null);
+  const time = useClock();
 
-  const [currentPath, setCurrentPath] = useState([]);
-  const [sidebarWidth, setSidebarWidth] = useState(320); // px
-  const draggingRef = useRef(false);
-
-  const onMouseMove = useCallback((e) => {
-    if (!draggingRef.current) return;
-    const min = 200;
-    const max = 560;
-    const next = Math.min(max, Math.max(min, e.clientX - (window.innerWidth - Math.min(window.innerWidth, 1024)) / 2 - 32));
-    setSidebarWidth(next);
+  useEffect(() => {
+    inputRef.current?.focus();
   }, []);
 
-  const onMouseUp = useCallback(() => {
-    draggingRef.current = false;
-    window.removeEventListener('mousemove', onMouseMove);
-    window.removeEventListener('mouseup', onMouseUp);
-  }, [onMouseMove]);
+  const commands = {
+    help: () => (
+      'Commands: help, clear, whoami, echo <text>, ls, about' 
+    ),
+    clear: () => {
+      setHistory([]);
+      return null;
+    },
+    whoami: () => 'Suhas Uppala',
+    echo: (args) => args.join(' '),
+    ls: () => 'projects  notes  playground',
+    about: () => 'Frontend engineer crafting interactive, performant web experiences.'
+  };
 
-  const startDrag = useCallback(() => {
-    draggingRef.current = true;
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-  }, [onMouseMove, onMouseUp]);
+  function runCommand(raw) {
+    const line = raw.trim();
+    if (!line) return;
+    const [cmd, ...args] = line.split(/\s+/);
+    const fn = commands[cmd];
+    if (!fn) {
+      setHistory((h) => [...h, `${PROMPT} ${line}`, `Command not found: ${cmd}`]);
+      return;
+    }
+    const result = fn(args);
+    if (result === null) return; // clear already handled
+    if (typeof result === 'string') {
+      setHistory((h) => [...h, `${PROMPT} ${line}`, result]);
+    }
+  }
+
+  function onSubmit(e) {
+    e.preventDefault();
+    runCommand(input);
+    setInput('');
+  }
 
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-b from-emerald-50 to-white dark:from-zinc-900 dark:to-zinc-950 text-emerald-950 dark:text-emerald-100">
-      <div className="mx-auto flex h-full max-w-6xl flex-col px-4 sm:px-8 py-6 sm:py-8 gap-6">
-        <div className="shrink-0">
-          <h2 className="text-3xl font-semibold tracking-tight">Terminal</h2>
-          <p className="text-emerald-800/80 dark:text-emerald-200/80 mt-1">Use bash-like commands to explore my projects and details.</p>
-        </div>
-
-        <div className="flex min-h-0 flex-1 rounded-xl overflow-hidden shadow-lg shadow-emerald-600/10 border border-emerald-200/70 dark:border-emerald-900/60 bg-white dark:bg-zinc-950">
-          <div className="flex w-full min-h-0 flex-col">
-            <TitleBar title="bash — portfolio" path={currentPath.length ? '~/'+ currentPath.join('/') : '~'} />
-            <div className="flex min-h-0 flex-1">
-              {/* Sidebar */}
-              <aside className="hidden md:flex min-h-0 flex-col border-r border-emerald-100/60 dark:border-emerald-900/60 bg-emerald-50/40 dark:bg-zinc-900/40"
-                style={{ width: sidebarWidth }}>
-                <FolderTree fsRoot={fsRoot} currentPath={currentPath} onNavigate={setCurrentPath} />
-              </aside>
-
-              {/* Resizer handle */}
-              <div
-                className="hidden md:block w-1 cursor-col-resize bg-transparent hover:bg-emerald-500/20"
-                onMouseDown={startDrag}
-                aria-label="Resize sidebar"
-              />
-
-              {/* Terminal area + Info panel */}
-              <main className="flex-1 min-h-0 flex">
-                <div className="flex h-full min-h-0 w-full p-0">
-                  <div className="flex-1 min-w-0">
-                    <Terminal fsRoot={fsRoot} currentPath={currentPath} setCurrentPath={setCurrentPath} />
-                  </div>
-                  <InfoPanel fsRoot={fsRoot} currentPath={currentPath} />
-                </div>
-              </main>
+    <section className="pt-14 min-h-screen bg-neutral-950 text-emerald-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <div className="rounded-xl overflow-hidden border border-emerald-400/20 bg-gradient-to-b from-neutral-900/60 to-neutral-900/80">
+          {/* Title bar */}
+          <div className="flex items-center justify-between px-4 h-10 border-b border-emerald-400/10 bg-neutral-900/70">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-2.5 h-2.5 rounded-full bg-red-500" />
+              <span className="inline-block w-2.5 h-2.5 rounded-full bg-yellow-500" />
+              <span className="inline-block w-2.5 h-2.5 rounded-full bg-green-500" />
+              <span className="ml-3 text-sm text-emerald-100/80">Terminal — Suhas Uppala</span>
             </div>
-            <StatusBar currentPath={currentPath} />
+            <div className="flex items-center gap-2 text-xs text-emerald-100/60">
+              <Clock className="w-3.5 h-3.5" /> {time}
+            </div>
+          </div>
+
+          {/* Terminal body */}
+          <div className="p-4 font-mono text-sm min-h-[50vh] custom-scrollbar">
+            {history.map((line, i) => (
+              <Line key={i}>{line}</Line>
+            ))}
+            <form onSubmit={onSubmit} className="flex items-center gap-2 mt-1">
+              <span className="text-emerald-300">{PROMPT}</span>
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="flex-1 bg-transparent outline-none text-emerald-50 placeholder:text-emerald-100/40"
+                placeholder="type a command and press enter"
+              />
+              <button
+                type="submit"
+                className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-emerald-600/20 text-emerald-200 hover:bg-emerald-600/30 border border-emerald-500/30"
+              >
+                <CornerDownLeft className="w-4 h-4" /> Enter
+              </button>
+            </form>
+          </div>
+
+          {/* Status bar */}
+          <div className="flex items-center justify-between px-4 h-9 border-t border-emerald-400/10 text-xs text-emerald-100/70 bg-neutral-900/70">
+            <span>Type "help" for commands</span>
+            <span>~/portfolio</span>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

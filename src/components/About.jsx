@@ -9,15 +9,15 @@ export default function About() {
             </h2>
             <p className="mt-4 text-gray-700 dark:text-gray-300 leading-relaxed">
               I craft thoughtful interfaces with a focus on clarity, motion, and accessibility. This site showcases a
-              streamlined hero powered by a 3D scene and a subtle radar motif. No skill tags here—just a simple, clean
-              presentation to keep the focus on the work.
+              streamlined hero powered by a 3D scene and a subtle radar motif. Minimal distractions—no skill tags or
+              extra buttons—so the work can speak for itself.
             </p>
           </div>
           <div className="rounded-2xl border border-black/5 dark:border-white/10 p-6 bg-white/60 dark:bg-white/5 backdrop-blur">
             <dl className="grid grid-cols-2 gap-6 text-sm">
               <div>
                 <dt className="text-gray-500 dark:text-gray-400">Name</dt>
-                <dd className="font-medium text-gray-900 dark:text-white">Your Name</dd>
+                <dd className="font-medium text-gray-900 dark:text-white">Suhas Uppala</dd>
               </div>
               <div>
                 <dt className="text-gray-500 dark:text-gray-400">Role</dt>

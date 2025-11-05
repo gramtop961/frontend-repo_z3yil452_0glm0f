@@ -12,7 +12,7 @@ export default function Hero() {
         />
       </div>
 
-      {/* Green radar tint and grid accent (does not block interaction) */}
+      {/* Green radar tint and sweep overlay (does not block interaction) */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/10 via-transparent to-emerald-600/10" />
         {/* Radar sweep ring */}
@@ -31,7 +31,7 @@ export default function Hero() {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28 md:py-32">
         <div className="max-w-2xl">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-            Your Name
+            Suhas Uppala
           </h1>
           <p className="mt-4 text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-xl">
             Building interactive, performant web experiences. Explore a radar‑inspired globe and a clean, modern interface.
