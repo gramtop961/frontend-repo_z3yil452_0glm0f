@@ -3,8 +3,11 @@ import TitleBar from './components/TitleBar';
 import FolderTree from './components/FolderTree';
 import Terminal from './components/Terminal';
 import StatusBar from './components/StatusBar';
+import Spline from '@splinetool/react-spline';
+import { Github, Linkedin, Mail, Trophy, GraduationCap } from 'lucide-react';
 
 export default function App() {
+  // Virtual filesystem modeled for the terminal portfolio
   const fsRoot = useMemo(
     () => ({
       type: 'dir',
@@ -12,52 +15,131 @@ export default function App() {
         'about.txt': {
           type: 'file',
           content:
-            "Hi, I'm Your Name — a frontend-focused full‑stack developer. I design and build fast, accessible web apps with React, TypeScript, and Python backends.\n\nWhat I care about:\n- Clean design and great UX\n- Performance and accessibility\n- Clear, maintainable code\n\nUse `projects` to see highlights or browse the folders with `ls`, `cd`, and `tree`.",
+            "I'm Suhas Uppala — a developer passionate about AI/ML, full‑stack apps, and building delightful, interactive user experiences. I enjoy shipping real products that are fast, accessible, and thoughtfully designed.\n\nWhat I work with:\n- Languages: C, C++, Java, R, Python, SQL, JavaScript, HTML, CSS\n- Frontend: React (Vite), Tailwind, Flutter\n- Backend: FastAPI, Node\n- ML/DS: scikit‑learn, Pandas, Keras, TensorFlow, NLP\n- Data Viz: Power BI, Tableau, R\n- Tools: Git, Docker, Data Preprocessing, Recommender Systems\n- DB: MySQL, MongoDB, SQLite\n- OS: Windows, Linux",
         },
         'skills.txt': {
           type: 'file',
           content:
-            '- Languages: JavaScript/TypeScript, Python, SQL\n- Frontend: React, Vite, Tailwind, Framer Motion\n- Backend: FastAPI, Node, REST\n- Cloud/Tools: Docker, Vercel, Git, CI/CD',
+            '- Programming: C, C++, Java, R, Python, SQL, JavaScript\n- Web: HTML, CSS, React, Tailwind, MERN\n- Backend: FastAPI, Node\n- ML: scikit-learn, Pandas, TensorFlow, Keras\n- Data Viz: Power BI, Tableau, R\n- Tools: GitHub, Docker\n- Databases: MySQL, MongoDB, SQLite\n- OS: Windows, Linux',
+        },
+        education: {
+          type: 'dir',
+          children: {
+            'btech.txt': {
+              type: 'file',
+              content:
+                'B.Tech in Computer Science Engineering (AIML) — VNR Vignana Jyothi Institute of Engineering and Technology (2022–2026)\nCGPA: 8.42',
+            },
+            'intermediate.txt': {
+              type: 'file',
+              content:
+                'Intermediate — Sri Chaitanya Junior College, Telangana (2020–2022)\nPercentage: 95.1%',
+            },
+          },
         },
         projects: {
           type: 'dir',
           children: {
-            'terminal-portfolio': {
+            'live-object-detection': {
               type: 'dir',
               children: {
                 'README.md': {
                   type: 'file',
                   content:
-                    '# Terminal Portfolio\nA mac-style, terminal-themed portfolio where visitors explore using bash-like commands. Built with React, Tailwind, and lots of polish.',
+                    'Live Object Detection\n- Built a YOLOv5-based system for real-time detection on live streams.\n- Integrated NLP-driven text commands for targeted tracking.\n- Delivered via a sleek Flask interface with live visualization.',
                 },
               },
             },
-            'realtime-chat': {
+            'sportai-athlete-platform': {
               type: 'dir',
               children: {
                 'README.md': {
                   type: 'file',
                   content:
-                    '# Realtime Chat\nSocket-powered chat app with rooms, message status, and playful UI.',
+                    'SportAI – AI-Powered Athlete Management\n- Real-time monitoring using Flutter, FastAPI, and OpenCV.\n- 90% posture detection accuracy; 40% injury reduction for 100+ users.\n- Injury prediction with Random Forest across 7 metrics (85% early detection).\n- RAG-based AI coaching using LangChain & Gemini API (1000+ daily requests).',
                 },
               },
             },
-            'ai-notes': {
+            'books-hub': {
               type: 'dir',
               children: {
                 'README.md': {
                   type: 'file',
                   content:
-                    '# AI Notes\nA smart notes app that summarizes, tags, and links ideas using LLMs. Fast and minimal.',
+                    'Books Hub – Personalized Library Manager\n- Full-stack app for cataloging, borrowing, and returns.\n- Secure auth, efficient DB management.\n- Dynamic search, filtering, and accessible UI.',
                 },
               },
+            },
+            'anomaly-detection-cctv': {
+              type: 'dir',
+              children: {
+                'README.md': {
+                  type: 'file',
+                  content:
+                    'Anomaly Detection in CCTV Footage\n- LRCN-based system for analyzing CCTV streams.\n- Detects suspicious activity and triggers real-time alerts.\n- Generates date-wise anomaly reports for review.',
+                },
+              },
+            },
+          },
+        },
+        certifications: {
+          type: 'dir',
+          children: {
+            'nptel-iot.txt': { type: 'file', content: 'Introduction to IoT — NPTEL (Score: 85%)' },
+            'tableau.txt': { type: 'file', content: 'Certification in Tableau' },
+            'python-nxtwave.txt': { type: 'file', content: 'Python Certification — NxtWave' },
+            'databases-nxtwave.txt': { type: 'file', content: 'Introduction to Databases — NxtWave' },
+            'developer-foundations.txt': { type: 'file', content: 'Developer Foundations — NxtWave' },
+            'internshala.txt': { type: 'file', content: 'Internshala Certification' },
+          },
+        },
+        achievements: {
+          type: 'dir',
+          children: {
+            'gds-solution-challenge-2025.txt': {
+              type: 'file',
+              content:
+                'Winner — GDGC Solution Challenge 2025 for SportAI (RAG, ML, OpenCV, Flutter).',
+            },
+            'project-contest-convergence-2k25.txt': {
+              type: 'file',
+              content: '2nd Prize — Project Contest & Consolation in Paper Presentation at Convergence 2K25.',
+            },
+            'project-expo.txt': {
+              type: 'file',
+              content:
+                '3rd Place — Project Expo among 100+ teams (CSE-AIML & IoT, VNRVJIET).',
+            },
+            'sih-2024-finalist.txt': {
+              type: 'file',
+              content:
+                'Smart India Hackathon 2024 — Finalist (Top 2.4% nationwide; Ministry of Communication).',
+            },
+            'amazon-ml-summer-school.txt': {
+              type: 'file',
+              content: 'Selected for Amazon ML Summer School.',
+            },
+          },
+        },
+        roles: {
+          type: 'dir',
+          children: {
+            'csi-head.txt': {
+              type: 'file',
+              content:
+                'Non-Technical Head — Computer Society of India Student Chapter, VNR VJIET (1000+ members).',
+            },
+            'krithomedh-design-head.txt': {
+              type: 'file',
+              content:
+                'Superior Design Head — Krithomedh, Department of AIML Club, VNR VJIET (300+ members).',
             },
           },
         },
         'contact.txt': {
           type: 'file',
           content:
-            'Email: you@example.com\nLinkedIn: linkedin.com/in/your-handle\nGitHub: github.com/your-handle',
+            'Name: Suhas Uppala\nGitHub: https://github.com/suhasuppala1805\nEmail: suhasuppala1805@gmail.com\nLinkedIn: https://www.linkedin.com/in/suhas-uppala',
         },
       },
     }),
@@ -67,24 +149,60 @@ export default function App() {
   const [currentPath, setCurrentPath] = useState([]); // array of strings from root '~'
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-50 to-zinc-100 dark:from-zinc-950 dark:to-zinc-900 text-zinc-900 dark:text-zinc-50 p-4 sm:p-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Terminal Portfolio</h1>
-          <p className="text-zinc-600 dark:text-zinc-400 mt-1">Explore using familiar bash commands in a mac-style window.</p>
-        </div>
-
-        <div className="rounded-xl overflow-hidden shadow-lg shadow-black/5">
-          <TitleBar title="bash — portfolio" path={currentPath.length ? '~/' + currentPath.join('/') : '~'} />
-          <div className="grid grid-cols-12 gap-0 bg-white dark:bg-zinc-950 border-x border-zinc-300/70 dark:border-zinc-700/70">
-            <aside className="hidden md:block col-span-3 border-r border-zinc-200/70 dark:border-zinc-800/70 bg-[#fbfbfc] dark:bg-zinc-950/40">
-              <FolderTree fsRoot={fsRoot} currentPath={currentPath} onNavigate={setCurrentPath} />
-            </aside>
-            <main className="col-span-12 md:col-span-9">
-              <Terminal fsRoot={fsRoot} currentPath={currentPath} setCurrentPath={setCurrentPath} />
-            </main>
+    <div className="min-h-screen bg-gradient-to-b from-zinc-50 to-zinc-100 dark:from-zinc-950 dark:to-zinc-900 text-zinc-900 dark:text-zinc-50">
+      {/* Hero with Spline 3D scene */}
+      <section className="relative h-[50vh] sm:h-[60vh] w-full overflow-hidden">
+        <Spline scene="https://prod.spline.design/VJLoxp84lCdVfdZu/scene.splinecode" style={{ width: '100%', height: '100%' }} />
+        {/* Overlay content */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-zinc-950/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 flex items-end sm:items-center justify-center">
+          <div className="mx-auto max-w-6xl px-4 sm:px-8 w-full">
+            <div className="pointer-events-none select-none">
+              <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight mb-3">Suhas Uppala</h1>
+              <p className="text-zinc-200 max-w-2xl">
+                AI/ML and full‑stack developer crafting interactive, delightful products.
+              </p>
+              <div className="mt-4 flex gap-3 text-zinc-100/90 flex-wrap">
+                <a className="pointer-events-auto inline-flex items-center gap-2 bg-zinc-900/70 backdrop-blur px-3 py-1.5 rounded-full hover:bg-zinc-900/90 transition" href="https://github.com/suhasuppala1805" target="_blank" rel="noreferrer">
+                  <Github size={16} /> GitHub
+                </a>
+                <a className="pointer-events-auto inline-flex items-center gap-2 bg-zinc-900/70 backdrop-blur px-3 py-1.5 rounded-full hover:bg-zinc-900/90 transition" href="mailto:suhasuppala1805@gmail.com">
+                  <Mail size={16} /> Email
+                </a>
+                <a className="pointer-events-auto inline-flex items-center gap-2 bg-zinc-900/70 backdrop-blur px-3 py-1.5 rounded-full hover:bg-zinc-900/90 transition" href="https://www.linkedin.com/in/suhas-uppala" target="_blank" rel="noreferrer">
+                  <Linkedin size={16} /> LinkedIn
+                </a>
+              </div>
+              <div className="mt-3 flex gap-3 text-xs text-zinc-200/90 flex-wrap">
+                <span className="inline-flex items-center gap-1 bg-zinc-900/60 px-2 py-1 rounded-full"><GraduationCap size={14} /> CSE (AIML), VNR VJIET</span>
+                <span className="inline-flex items-center gap-1 bg-zinc-900/60 px-2 py-1 rounded-full"><Trophy size={14} /> SIH 2024 Finalist</span>
+                <span className="inline-flex items-center gap-1 bg-zinc-900/60 px-2 py-1 rounded-full"><Trophy size={14} /> GDGC Solution Challenge Winner</span>
+              </div>
+            </div>
           </div>
-          <StatusBar currentPath={currentPath} />
+        </div>
+      </section>
+
+      {/* Terminal Portfolio window */}
+      <div className="p-4 sm:p-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-6">
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">Terminal Portfolio</h2>
+            <p className="text-zinc-600 dark:text-zinc-400 mt-1">Explore my work using familiar bash commands and a mac-style layout.</p>
+          </div>
+
+          <div className="rounded-xl overflow-hidden shadow-lg shadow-black/5">
+            <TitleBar title="bash — portfolio" path={currentPath.length ? '~/' + currentPath.join('/') : '~'} />
+            <div className="grid grid-cols-12 gap-0 bg-white dark:bg-zinc-950 border-x border-zinc-300/70 dark:border-zinc-700/70">
+              <aside className="hidden md:block col-span-3 border-r border-zinc-200/70 dark:border-zinc-800/70 bg-[#fbfbfc] dark:bg-zinc-950/40">
+                <FolderTree fsRoot={fsRoot} currentPath={currentPath} onNavigate={setCurrentPath} />
+              </aside>
+              <main className="col-span-12 md:col-span-9">
+                <Terminal fsRoot={fsRoot} currentPath={currentPath} setCurrentPath={setCurrentPath} />
+              </main>
+            </div>
+            <StatusBar currentPath={currentPath} />
+          </div>
         </div>
       </div>
     </div>
